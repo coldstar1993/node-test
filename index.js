@@ -3,8 +3,8 @@ const axios = require("axios");
 //const endpoint = "https://api.minascan.io/node/devnet/v1/graphql"; // This is buggy as hell nothing works
 const endpoint = "https://mina-node.devnet.nori.it.com/graphql"; // This endpoint works for the latest reliably, currently for me works for the newStateHash (but this might change after some time ¯\_(ツ)_/¯) but not the oldStateHash
 
-const newStateHash = "3NKgkDjJrtT1UevsfgTzVewJL6sWEZe9tQbJn2irYFXNyRFRreTU"; // From issue
-const oldStateHash = "3NL5hv4ysELXF2Tg5UZDMgBFcQLTM1tGtRRzMhgyLa5EzvbeDQhq"; // Original
+const newStateHash = "3NKsQEhABM4toSqfjb1QjrCk2SzpWbfDHJ2BMMc5Sk7KxnS3xoTf"; // From issue
+const oldStateHash = "3NKsQEhABM4toSqfjb1QjrCk2SzpWbfDHJ2BMMc5Sk7KxnS3xoTf"; // Original
 
 // Query to get latest block
 const bestChainQuery = `
@@ -90,8 +90,8 @@ async function testQuery(stateHash, label) {
     stateHash: stateHash,
     accountInfos: [
       {
-        publicKey: "B62qrLDt9eM5AVz84YnZWME3VMY4CQjiTH29WuBPRQQi54gD8Murrvn",
-        token: "xFGpiVZhxrVsiuse2vxQKL7J3y1aqPcnVqm4kBTYNmzLR1XL5P",
+        publicKey: "B62qqj6zf4j2wjz5Vuxztud4XnAFnHZat2JeKf1FwybkrkH491tR7ZR",
+        token: "xKHyyiq2ddBz8dSQZV64WUPyLCgENXgeUAFop5whyGVCDMVNdp",
       },
     ],
   };
@@ -141,10 +141,10 @@ async function main() {
   }
 
   // Step 3: Test with NEW hardcoded state hash from issue (always run)
-  await testQuery(newStateHash, "NEW (Hardcoded from Issue) StateHash");
+  // await testQuery(newStateHash, "NEW (Hardcoded from Issue) StateHash");
 
   // Step 4: Test with OLD hardcoded state hash (always run)
-  await testQuery(oldStateHash, "OLD (Original Hardcoded) StateHash");
+  // await testQuery(oldStateHash, "OLD (Original Hardcoded) StateHash");
 }
 
 main();
