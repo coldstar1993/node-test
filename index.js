@@ -1,10 +1,12 @@
 const axios = require("axios");
 
 //const endpoint = "https://api.minascan.io/node/devnet/v1/graphql"; // This is buggy as hell nothing works
-const endpoint = "https://mina-node.devnet.nori.it.com/graphql"; // This endpoint works for the latest reliably, currently for me works for the newStateHash (but this might change after some time ¯\_(ツ)_/¯) but not the oldStateHash
+const endpoint = "https://mina-node.devnet.nori.it.com/graphql"; // This endpoint works more reliably, currently for me works (**edit** as of 12 Dec it does not!) for the newStateHash (but this might change after some time ¯\_(ツ)_/¯ - **edit** it did!) but not the oldStateHash
 
-const newStateHash = "3NKsQEhABM4toSqfjb1QjrCk2SzpWbfDHJ2BMMc5Sk7KxnS3xoTf"; // From issue
-const oldStateHash = "3NKsQEhABM4toSqfjb1QjrCk2SzpWbfDHJ2BMMc5Sk7KxnS3xoTf"; // Original
+const latestStateHash = "3NLeA2QvCnLLU2GoMTAmStGd2FYXLrFc8DHR7PgyyDegAs1h1Jxz"; // Current (has issue)
+const newerIssueStateHash = "3NKsQEhABM4toSqfjb1QjrCk2SzpWbfDHJ2BMMc5Sk7KxnS3xoTf"; // Fairly recent (one with issue)
+const newIssueStateHash = "3NKgkDjJrtT1UevsfgTzVewJL6sWEZe9tQbJn2irYFXNyRFRreTU"; // From github issue (has issue)
+const oldStateHash = "3NL5hv4ysELXF2Tg5UZDMgBFcQLTM1tGtRRzMhgyLa5EzvbeDQhq"; // Original
 
 // Query to get latest block
 const bestChainQuery = `
@@ -129,22 +131,28 @@ async function testQuery(stateHash, label) {
 
 async function main() {
   // Step 1: Get latest state hash dynamically
-  const latestStateHash = await getLatestStateHash();
+  const dynamicLatestStateHash = await getLatestStateHash();
 
   // Step 2: Test with dynamically fetched LATEST state hash (only if we got one)
-  if (latestStateHash) {
-    await testQuery(latestStateHash, "LATEST (Dynamically Fetched) StateHash");
+  if (dynamicLatestStateHash) {
+    await testQuery(dynamicLatestStateHash, "DYNAMIC LATEST (Dynamically Fetched) StateHash");
   } else {
     console.log(`${"=".repeat(60)}`);
     console.log("Skipping LATEST StateHash test (failed to fetch)");
     console.log(`${"=".repeat(60)}\n`);
   }
 
-  // Step 3: Test with NEW hardcoded state hash from issue (always run)
-  // await testQuery(newStateHash, "NEW (Hardcoded from Issue) StateHash");
+  // Step 3: Test with latest hardcoded state hash
+  await testQuery(latestStateHash, "LATEST (Hardcoded) StateHash");
 
-  // Step 4: Test with OLD hardcoded state hash (always run)
-  // await testQuery(oldStateHash, "OLD (Original Hardcoded) StateHash");
+  // Step 4: Test with newer issue hardcoded state hash
+  await testQuery(newerIssueStateHash, "NEWER ISSUE (Hardcoded) StateHash");
+
+  // Step 5: Test with new issue hardcoded state hash
+  await testQuery(newIssueStateHash, "NEW ISSUE (Hardcoded from Issue) StateHash");
+
+  // Step 6: Test with old hardcoded state hash
+  await testQuery(oldStateHash, "OLD (Hardcoded) StateHash");
 }
 
 main();
